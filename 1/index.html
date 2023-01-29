@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+
+<body style="background-color:black;">
+    <center>
+        <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+        <button onclick="playall()">Play All</button>
+        <button onclick="pauseall()">Pause All</button>
+        <button onclick="resumeliveall()">Refresh All</button>
+        <br />
+        <select id="camnum">
+            <option>1</option>
+            <option>2</option>
+            <option>3</option>
+            <option>4</option>
+            <option>5</option>
+            <option>6</option>
+            <option>7</option>
+            <option>8</option>
+            <option>9</option>
+            <option>10</option>
+            <option>11</option>
+            <option>12</option>
+        </select>
+        <button
+            onclick="document.getElementById('stream'+document.getElementById('camnum').value).play();">Play</button>
+        <button
+            onclick="document.getElementById('stream'+document.getElementById('camnum').value).pause();">Pause</button>
+        <button onclick="resumelive(parseInt(document.getElementById('camnum').value))">Refresh</button>
+        <br />
+        <select id="cams">
+            <option>1-6</option>
+            <option>7-12</option>
+        </select>
+        <button onclick="viewselected(document.getElementById('cams').value)">View Selected</button>
+        <button onclick="viewall()">View All</button>
+        <br />
+        <video id="stream1" class="video" width="500" height="333" style="object-fit:fill;"></video>
+        <video id="stream2" class="video" width="500" height="333" style="object-fit:fill;"></video>
+        <video id="stream3" class="video" width="500" height="333" style="object-fit:fill;"></video>
+        <video id="stream4" class="video" width="500" height="333" style="object-fit:fill;"></video>
+        <video id="stream5" class="video" width="500" height="333" style="object-fit:fill;"></video>
+        <video id="stream6" class="video" width="500" height="333" style="object-fit:fill;"></video>
+        <video hidden="true" id="stream7" class="video" width="500" height="333" style="object-fit:fill;"></video>
+        <video hidden="true" id="stream8" class="video" width="500" height="333" style="object-fit:fill;"></video>
+        <video hidden="true" id="stream9" class="video" width="500" height="333" style="object-fit:fill;"></video>
+        <video hidden="true" id="stream10" class="video" width="500" height="333" style="object-fit:fill;"></video>
+        <video hidden="true" id="stream11" class="video" width="500" height="333" style="object-fit:fill;"></video>
+        <video hidden="true" id="stream12" class="video" width="500" height="333" style="object-fit:fill;"></video>
+    </center>
+</body>
+<script>
+    function streamsource(num) {
+        switch (num) {
+            case 12:
+                return "https://mcleansfs4.us-east-1.skyvdn.com/rtplive/R3_089/playlist.m3u8"
+                break;
+            case 11:
+                return "https://mcleansfs4.us-east-1.skyvdn.com/rtplive/R3_090/playlist.m3u8"
+                break;
+            case 10:
+                return "https://mcleansfs5.us-east-1.skyvdn.com/rtplive/R3_091/playlist.m3u8"
+                break;
+            case 9:
+                return "https://mcleansfs5.us-east-1.skyvdn.com/rtplive/R3_092/playlist.m3u8"
+                break;
+            case 8:
+                return "https://mcleansfs5.us-east-1.skyvdn.com/rtplive/R3_093/playlist.m3u8"
+                break;
+            case 7:
+                return "https://mcleansfs5.us-east-1.skyvdn.com/rtplive/R3_094/playlist.m3u8"
+                break;
+            case 6:
+                return "https://mcleansfs5.us-east-1.skyvdn.com/rtplive/R3_095/playlist.m3u8"
+                break;
+            case 5:
+                return "https://mcleansfs1.us-east-1.skyvdn.com/rtplive/R3_172/playlist.m3u8"
+                break;
+            case 4:
+                return "https://mcleansfs1.us-east-1.skyvdn.com/rtplive/R3_173/playlist.m3u8"
+                break;
+            case 3:
+                return "https://mcleansfs5.us-east-1.skyvdn.com/rtplive/R3_147/playlist.m3u8"
+                break;
+            case 2:
+                return "https://mcleansfs1.us-east-1.skyvdn.com/rtplive/R3_174/playlist.m3u8"
+                break;
+            case 1:
+                return "https://mcleansfs1.us-east-1.skyvdn.com/rtplive/R3_175/playlist.m3u8"
+                break;
+        }
+    }
+    function playall() {
+        var streams = document.getElementsByClassName("video");
+        for (var i = 0; i < streams.length; i++) {
+            var video = streams[i];
+            if (video.hidden == false) {
+                video.play();
+            }
+        }
+    }
+    function pauseall() {
+        var streams = document.getElementsByClassName("video");
+        for (var i = 0; i < streams.length; i++) {
+            var video = streams[i];
+            if (video.hidden == false) {
+                video.pause();
+            }
+        }
+    }
+    function loadstream(id, autoplay = true) {
+        if (id > 0 && id < 13) {
+            var video = document.getElementById('stream' + id);
+            if (video.hidden == false) {
+                var hls = new Hls();
+                hls.on(Hls.Events.MANIFEST_PARSED, function (event, data) {
+                    console.log(
+                        "manifest loaded, found " + data.levels.length + " quality level"
+                    );
+                });
+                hls.loadSource(streamsource(id));
+                hls.attachMedia(video);
+                if (autoplay) {
+                    video.play();
+                }
+            }
+        } else {
+            console.log("invalid stream id " + id)
+        }
+    }
+    function resumeliveall() {
+        var streams = document.getElementsByClassName("video");
+        for (var i = 0; i < streams.length; i++) {
+            loadstream(i + 1);
+        }
+    }
+    function resumelive(id) {
+        loadstream(id);
+    }
+    function viewselected(camsview) {
+        var streams = document.getElementsByClassName("video");
+        if (camsview == "1-6") {
+            for (var i = 0; i < streams.length; i++) {
+                if (i < 6) {
+                    streams[i].hidden = false;
+                } else {
+                    streams[i].hidden = true;
+                    streams[i].pause();
+                }
+            }
+        } else {
+            for (var i = 0; i < streams.length; i++) {
+                if (i < 6) {
+                    streams[i].hidden = true;
+                    streams[i].pause();
+                } else {
+                    streams[i].hidden = false;
+                }
+            }
+        }
+        resumeliveall()
+    }
+    function viewall() {
+        var streams = document.getElementsByClassName("video");
+        for (var i = 0; i < streams.length; i++) {
+            streams[i].hidden = false;
+        }
+        resumeliveall()
+    }
+</script>
+<script>
+    if (Hls.isSupported()) {
+        var streams = document.getElementsByClassName("video");
+        for (var i = 0; i < streams.length; i++) {
+            loadstream(i + 1, false);
+        }
+    }
+</script>
