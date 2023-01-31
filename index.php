@@ -147,6 +147,7 @@
 
         img.projicon{
             max-width: 30px;
+            margin-right: 10px;
             object-fit: cover;
         }
     </style>
@@ -162,8 +163,16 @@
                 $directories = glob($projdir . '/*', GLOB_ONLYDIR);
                 foreach ($directories as $fulldir) {
                     $dir = str_replace($projdir, "", $fulldir);
+                    
+                    $imgsrc = $fulldir."/icon.png";
+                    if (file_exists($imgsrc)) {
+                        $imgsrc = $dir."/icon.png";
+                    } else {
+                        $imgsrc = "assets/sinon.png";
+                    }
+
                     if ($dir !== "/assets") {
-                        echo "<li><img class='projicon' src='".$dir."/icon.png'/><a href='" . $dir . "'>" . file_get_contents($fulldir . "/projname.txt") . "</a></li>";
+                        echo "<li><img class='projicon' src='$imgsrc'/><a href='" . $dir . "'>" . file_get_contents($fulldir . "/projname.txt") . "</a></li>";
                     }
                 }
                 ?>

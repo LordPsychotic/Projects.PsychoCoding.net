@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script src="https://cdn.jsdelivr.net/npm/memoryjs@3.5.1/index.js"></script>
+    <script>
+      function readMemory() {
+        const processName = "notepad.exe";
+        const process = memoryjs.openProcess(processName);
+
+        const handle = memoryjs.openProcess(process.pid);
+
+        const hexAddress = "0x00400000";
+        const hexSize = 4;
+        const hexString = memoryjs.readHex(handle, hexAddress, hexSize);
+
+        console.log(hexString);
+      }
+    </script>
+  </head>
+  <body>
+    <button onclick="readMemory()">Read Memory</button>
+  </body>
+</html>
