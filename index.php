@@ -135,7 +135,7 @@
             margin: 0;
             padding: 10px;
             border-bottom: 1px solid blue;
-            display:flex;
+            display: flex;
             flex-direction: row;
             align-items: center;
             justify-content: center;
@@ -145,7 +145,7 @@
             border-bottom: none;
         }
 
-        img.projicon{
+        img.projicon {
             max-width: 30px;
             margin-right: 10px;
             object-fit: cover;
@@ -163,16 +163,17 @@
                 $directories = glob($projdir . '/*', GLOB_ONLYDIR);
                 foreach ($directories as $fulldir) {
                     $dir = str_replace($projdir, "", $fulldir);
-                    
-                    $imgsrc = $fulldir."/icon.png";
-                    if (file_exists($imgsrc)) {
-                        $imgsrc = $dir."/icon.png";
-                    } else {
-                        $imgsrc = "assets/sinon.png";
-                    }
+                    if (!file_exists($fulldir . "/hide.me")) {
+                        $imgsrc = $fulldir . "/icon.png";
+                        if (file_exists($imgsrc)) {
+                            $imgsrc = $dir . "/icon.png";
+                        } else {
+                            $imgsrc = "assets/sinon.png";
+                        }
 
-                    if ($dir !== "/assets") {
-                        echo "<li><img class='projicon' src='$imgsrc'/><a href='" . $dir . "'>" . file_get_contents($fulldir . "/projname.txt") . "</a></li>";
+                        if ($dir !== "/assets") {
+                            echo "<li><img class='projicon' src='$imgsrc'/><a href='" . $dir . "'>" . file_get_contents($fulldir . "/projname.txt") . "</a></li>";
+                        }
                     }
                 }
                 ?>
